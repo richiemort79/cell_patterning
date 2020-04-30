@@ -37,6 +37,7 @@ var daughter = "";//this is either a or b and is appended to gtrack in the resul
 var mitosis_frame = "";//remember when the mitosis happened so we can go back to track the second daughter
 var mitosis_x = 0; //remember where the mitosis happened so we can go back to track the second daughter
 var mitosis_y = 0; //remember where the mitosis happened so we can go back to track the second daughter
+var mtrack = "1";//global vraible for the track name including daughter
 
 var posx = 0;//posiiton you click
 var posy = 0;//position you click
@@ -65,6 +66,10 @@ var dCmds = newMenu("Data Operations Menu Tool", newArray("Get Class and Trim", 
 
 macro "Initialize Action Tool - CeefD25D4cD52Dd6CdddD18CfffD00D01D02D03D0cD0dD0eD0fD10D11D1eD1fD20D27D28D2fD30D35D3aD3fD44D4bD53D5cD72D82Da3DacDb4DbbDc0Dc5DcaDcfDd0Dd7DdfDe0De1DeeDefDf0Df1Df2Df3DfcDfdDfeDffCcccDd4CfffD26D39D62D7dD92Db3Dc4Dc6Dd8CdefD22D2dDd2DddCaaaDe7CeffD04D0bD29D37D38D40D45D4fD54D55D64D6cD73D7bD83D8aD8dD99D9cDa8Db0DbfDc9Df4DfbCdefD5bD6aD6bDa9Db7Db8CcdfD14D41Db1CfffD12D1dD21D2eD34D36D43D63D93Dd1DdeDe2DedCdefD05D0aD13D1cD31D3eD50D5fDa0DafDc1DceDe3DecDf5DfaC58cD97CeefD46D47D56D65D84CdeeD9dCbdfDebCbcdDadCeefD49D4aD58D59D5aD67D68D69D6dD7cD8cDa5Da6Db5Db6Dc7Dc8CcefD06D09D60D6fD90D9fDf6Df9C58cD75D76D77D78D79D86D87D88CeefD48D57D66D94D95Da4CddeD24D42Dd5CcdeD3dCbbcD3cDe6C9aaDbdCeeeD2aCbdfD07D08D70D7fD80D8fDf7Df8CaceD96CeffD3bCdddD71CccdDe5CabbDe9C999D7eD8eCdefD8bD9aD9bDaaDabDb9DbaCcdfD1bDe4CbcdDcdDdcCddeD15D51CcdeD1aDa1Dc2Dd3CbbdDaeCaabD9eDdbCeeeDa2CbdeDa7DbeCdddD17D19D81CccdDc3CaabD6eC9aaDccCdefD23D32CcdfD4eCbcdDdaCcdeD2cCaaaDe8CbceD74D85CddeD16D33D61D91CcddD5dDb2CbbbD4dCbcdD5eDeaCdeeDbcDcbDd9CccdD2b"
 {
+
+//reset tracks
+	gtrack = 1;
+	mtrack = toString(gtrack);
 
 //Force 8-bit
 	run("8-bit");
@@ -291,7 +296,7 @@ run("Restore Selection");
     if (type == -1) {exit("There is no selection have you initialised the image?");}
 
 //some variables
-	track = toString(gtrack)+toString(daughter);
+	//track = toString(gtrack)+toString(daughter);
     //print(track);
     slice = getSliceNumber();
     
@@ -340,7 +345,7 @@ run("Restore Selection");
        if ((x == x_values[i]) && (y == y_values[i])) {inside = "Yes";} else {}
     }
 
-    print(f,(number++)+"\t"+Image+"\t"+track+"\t"+is_seed+"\t"+(slice)+"\t"+"1"+"\t"+"1"+"\t"+(x)+"\t"+(y)+"\t"+(com_roi_x)+"\t"+(com_roi_y)+"\t"+dist+"\t"+inside);
+    print(f,(number++)+"\t"+Image+"\t"+mtrack+"\t"+is_seed+"\t"+(slice)+"\t"+"1"+"\t"+"1"+"\t"+(x)+"\t"+(y)+"\t"+(com_roi_x)+"\t"+(com_roi_y)+"\t"+dist+"\t"+inside);
 
 //advance to next slice
     run("Next Slice [>]");
@@ -373,6 +378,7 @@ macro "Add Track Action Tool - CfffD00D01D02D03D04D05D06D07D0bD0cD0dD0eD0fD10D11
 	is_seed = true;//are we on a seed track or a daughter track?
  	daughter = "";//this is either a or b and is appended to gtrack in the results table
 	mitosis_frame = 0;//remember when the mitosis happened so we can go back to track the second daughter
+	mtrack=gtrack;
     waitForUser("A new track ("+gtrack+") has been added to the analysis. Please select the tracking button and continue");
     setSlice(1);
 }
@@ -392,7 +398,8 @@ macro "Add Mitosis Action Tool - CfffD00D01D02D03D04D05D06D07D08D09D0aD0cD0dD0eD
 	mitosis_frame = mslice;//remember when the mitosis happened so we can go back to track the second daughter
 	mitosis_x =	posx;
 	mitosis_y = posy;
-	waitForUser("A mitosis has been recorded and the track has switched to "+gtrack+daughter);
+	mtrack = toString(mtrack)+toString(daughter);
+	waitForUser("A mitosis has been recorded and the track has switched to "+mtrack);
 	//need to remember location and get an ROI for that
 }
 
